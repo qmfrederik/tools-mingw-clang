@@ -33,11 +33,12 @@ jobs:
         CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld -lstdc++ -lgcc_s" cmake ..
         cmake --build . -j$(nproc)
         cmake --install . --prefix=/mingw64
+        cp /mingw64/lib/objc.dll /mingw64/bin/
 
     - name: Compile tools-make
       run: |
         cd ~/git/tools-make/
-        ./configure
+        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld" ./configure --with-library-combo=ng-gnu-gnu --with-runtime-abi=gnustep-2.0
         make -j$(nproc)
         make install
 
