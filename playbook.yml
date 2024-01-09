@@ -11,6 +11,7 @@
       - mingw-w64-x86_64-cairo
       - mingw-w64-x86_64-freetype
       - mingw-w64-x86_64-gnutls
+      - mingw-w64-x86_64-libxslt
 
   - name: Create ~/pkg directory
     ansible.builtin.file:
