@@ -1,0 +1,70 @@
+name: Compile GNUstep
+on:
+  push:
+  pull_request:
+    
+jobs:
+  msys2:
+    strategy:
+      matrix:
+        os: [ windows-2019 ]
+        msystem: [ mingw64 ]
+      # Don't abort runners if a single one fails
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} ${{ matrix.msystem }}
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.msystem }}
+        update: true
+        install: ansible
+    - name: Run Ansible script
+      run: |
+        ansible-playbook --connection=local --inventory 127.0.0.1, --limit 127.0.0.1 ./playbook.yml
+
+    - name: Compile libobjc2
+      run: |
+        cd ~/git/libobjc2/build
+        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld -lstdc++ -lgcc_s" cmake ..
+        cmake --build . -j$(nproc)
+        cmake --install . --prefix=/mingw64
+
+    - name: Compile tools-make
+      run: |
+        cd ~/git/tools-make/
+        ./configure
+        make -j$(nproc)
+        make install
+
+    - name: Compile libs-base
+      run: |
+        cd ~/git/libs-base/
+        ./configure
+        make -j$(nproc)
+        make install
+
+    - name: Compile libs-gui
+      run: |
+        cd ~/git/libs-gui/
+        ./configure
+        make -j$(nproc)
+        make install
+
+    - name: Compile libs-back
+      run: |
+        cd ~/git/libs-back/
+        ./configure --enable-graphics=cairo
+        make -j$(nproc)
+        make install
+
+    - name: Compile plugins-themes-WinUXTheme
+      run: |
+        cd ~/git/plugins-themes-WinUXTheme/
+        ./configure
+        make -j$(nproc)
+        make install

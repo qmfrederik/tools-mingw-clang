@@ -1,0 +1,85 @@
+---
+- hosts: all
+  tasks:
+  - name: Install toolchain
+    community.general.pacman:
+      name: 
+      - git
+      - make
+      - unzip
+      - mingw-w64-x86_64-cmake
+      - mingw-w64-x86_64-cairo
+      - mingw-w64-x86_64-freetype
+
+  - name: Create ~/pkg directory
+    ansible.builtin.file:
+      path: ~/pkg/
+      state: directory
+      mode: '0755'
+
+  - name: Download clang with mingw-fixes for Objective C
+    ansible.builtin.unarchive:
+      src: https://qmcdn.blob.core.windows.net/gnustep/MINGW64-packages.zip
+      dest: ~/pkg/
+      remote_src: yes
+
+  - name: Install clang
+    community.general.pacman:
+      name: 
+        - ~/pkg/mingw-w64-x86_64-clang-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-clang-analyzer-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-clang-libs-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-clang-tools-extra-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-compiler-rt-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-lld-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-llvm-17.0.6-7-any.pkg.tar.zst
+        - ~/pkg/mingw-w64-x86_64-llvm-libs-17.0.6-7-any.pkg.tar.zst
+
+  - name: Create ~/git directory
+    ansible.builtin.file:
+      path: ~/git/
+      state: directory
+      mode: '0755'
+
+  - name: Clone libobjc2
+    git: 
+      repo: "https://github.com/qmfrederik/libobjc2"
+      dest: ~/git/libobjc2
+      version: "cxx-exceptions"
+
+  - name: Create ~/git/libobjc2/build directory
+    ansible.builtin.file:
+      path: ~/git/libobjc2/build
+      state: directory
+      mode: '0755'
+
+  - name: Clone tools-make
+    git: 
+      repo: "https://github.com/gnustep/tools-make"
+      dest: ~/git/tools-make
+      version: "make-2_9_1"
+
+  - name: Clone libs-base
+    git: 
+      repo: "https://github.com/qmfrederik/libs-base"
+      dest: ~/git/libs-base
+      version: "ucrt64"
+
+  - name: Clone libs-gui
+    git: 
+      repo: "https://github.com/qmfrederik/libs-gui"
+      dest: ~/git/libs-gui
+      version: "ucrt64"
+
+  - name: Clone libs-back repository
+    git:
+      repo: https://github.com/qmfrederik/libs-back
+      dest: ~/git/libs-back
+      version: "ucrt64"
+
+  - name: Clone plugins-themes-WinUXTheme repository
+    git:
+      repo: https://github.com/keysight-eggplant/plugins-themes-WinUXTheme
+      dest: ~/git/plugins-themes-WinUXTheme
+      version: "gnustep_testplant_branch"
+
