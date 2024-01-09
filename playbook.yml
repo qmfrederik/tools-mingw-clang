@@ -10,6 +10,7 @@
       - mingw-w64-x86_64-cmake
       - mingw-w64-x86_64-cairo
       - mingw-w64-x86_64-freetype
+      - mingw-w64-x86_64-gnutls
 
   - name: Create ~/pkg directory
     ansible.builtin.file:
