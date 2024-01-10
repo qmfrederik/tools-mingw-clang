@@ -47,9 +47,9 @@
 
   - name: Clone libobjc2
     git: 
-      repo: "https://github.com/qmfrederik/libobjc2"
+      repo: "https://github.com/gnustep/libobjc2"
       dest: ~/git/libobjc2
-      version: "cxx-exceptions"
+      version: "master"
 
   - name: Create ~/git/libobjc2/build directory
     ansible.builtin.file:
