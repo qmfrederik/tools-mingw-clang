@@ -59,6 +59,7 @@ jobs:
     - name: Compile libs-back
       run: |
         cd ~/git/libs-back/
+        . /mingw64/share/GNUstep/Makefiles/GNUstep.sh
         ./configure --enable-graphics=cairo
         make -j$(nproc)
         make install
@@ -66,6 +67,5 @@ jobs:
     - name: Compile plugins-themes-WinUXTheme
       run: |
         cd ~/git/plugins-themes-WinUXTheme/
-        ./configure
         make -j$(nproc)
         make install
