@@ -38,7 +38,7 @@ jobs:
     - name: Compile tools-make
       run: |
         cd ~/git/tools-make/
-        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld" ./configure --with-library-combo=ng-gnu-gnu --with-runtime-abi=gnustep-2.0
+        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld -lstdc++ -lgcc_s" ./configure --with-library-combo=ng-gnu-gnu --with-runtime-abi=gnustep-2.0
         make -j$(nproc)
         make install
 
