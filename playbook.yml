@@ -83,7 +83,7 @@
 
   - name: Clone plugins-themes-WinUXTheme repository
     git:
-      repo: https://github.com/keysight-eggplant/plugins-themes-WinUXTheme
+      repo: https://github.com/qmfrederik/plugins-themes-WinUXTheme
       dest: ~/git/plugins-themes-WinUXTheme
-      version: "gnustep_testplant_branch"
+      version: "ucrt64"
 

@@ -30,7 +30,7 @@ jobs:
     - name: Compile libobjc2
       run: |
         cd ~/git/libobjc2/build
-        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld -lstdc++ -lgcc_s" cmake .. -DOLDABI_COMPAT=ON -DLEGACY_COMPAT=ON
+        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld -lstdc++ -lgcc_s" cmake .. -DOLDABI_COMPAT=ON
         cmake --build . -j$(nproc)
         cmake --install . --prefix=/mingw64
         cp /mingw64/lib/objc.dll /mingw64/bin/
