@@ -9,10 +9,18 @@ jobs:
       matrix:
         os: [ windows-2019 ]
         msystem: [ mingw64 ]
+        runtime: [ gcc, gnustep-2.0 ]
+        include:
+          - runtime: gcc
+            library-combo: gnu-gnu-gnu
+            linker-flags: -fuse-ld=lld
+          - runtime: gnustep-2.0
+            library-combo: ng-gnu-gnu
+            linker-flags: -fuse-ld=lld -lstdc++ -lgcc_s
       # Don't abort runners if a single one fails
       fail-fast: false
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} ${{ matrix.msystem }}
+    name: ${{ matrix.os }} ${{ matrix.msystem }} ${{ matrix.combo }}
     defaults:
       run:
         shell: msys2 {0}
@@ -38,7 +46,7 @@ jobs:
     - name: Compile tools-make
       run: |
         cd ~/git/tools-make/
-        CC=clang CXX=clang++ LDFLAGS="-fuse-ld=lld" ./configure --with-library-combo=gnu-gnu-gnu --with-runtime-abi=gcc
+        CC=clang CXX=clang++ LDFLAGS="${{ matrix.linker-flags }}" ./configure --with-library-combo=${{ matrix.library-combo }} --with-runtime-abi=${{ matrix.runtime }}
         make -j$(nproc)
         make install
 
