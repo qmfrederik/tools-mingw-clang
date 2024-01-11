@@ -10,6 +10,7 @@ jobs:
         os: [ windows-2019 ]
         msystem: [ mingw64 ]
         runtime: [ gcc, gnustep-2.0 ]
+        flavor: [ gnustep, keysight ]
         include:
           - runtime: gcc
             library-combo: gnu-gnu-gnu
@@ -17,10 +18,16 @@ jobs:
           - runtime: gnustep-2.0
             library-combo: ng-gnu-gnu
             linker-flags: -fuse-ld=lld -lstdc++ -lgcc_s
+          - flavor: keysight
+            repo: qmfrederik
+            branch: ucrt64
+          - flavor: gnustep
+            repo: gnustep
+            branch: master
       # Don't abort runners if a single one fails
       fail-fast: false
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} ${{ matrix.msystem }} ${{ matrix.combo }}
+    name: ${{ matrix.flavor }} ${{ matrix.os }} ${{ matrix.msystem }} ${{ matrix.combo }}
     defaults:
       run:
         shell: msys2 {0}
@@ -33,7 +40,7 @@ jobs:
         install: ansible
     - name: Run Ansible script
       run: |
-        ansible-playbook --connection=local --inventory 127.0.0.1, --limit 127.0.0.1 ./playbook.yml
+        ansible-playbook --connection=local --inventory 127.0.0.1, --limit 127.0.0.1 --extra-vars "repo=${{ matrix.repo }} branch=${{ matrix.branch }}" ./playbook.yml
 
     - name: Compile libobjc2
       run: |

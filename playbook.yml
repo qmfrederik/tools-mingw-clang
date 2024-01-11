@@ -65,25 +65,25 @@
 
   - name: Clone libs-base
     git: 
-      repo: "https://github.com/qmfrederik/libs-base"
+      repo: "https://github.com/{{ repo }}/libs-base"
       dest: ~/git/libs-base
-      version: "ucrt64"
+      version: "{{ branch }}"
 
   - name: Clone libs-gui
     git: 
-      repo: "https://github.com/qmfrederik/libs-gui"
+      repo: "https://github.com/{{ repo }}/libs-gui"
       dest: ~/git/libs-gui
-      version: "ucrt64"
+      version: "{{ branch }}"
 
   - name: Clone libs-back repository
     git:
-      repo: https://github.com/qmfrederik/libs-back
+      repo: https://github.com/{{ repo }}/libs-back
       dest: ~/git/libs-back
-      version: "ucrt64"
+      version: "{{ branch }}"
 
   - name: Clone plugins-themes-WinUXTheme repository
     git:
-      repo: https://github.com/qmfrederik/plugins-themes-WinUXTheme
+      repo: https://github.com/{{ repo }}/plugins-themes-WinUXTheme
       dest: ~/git/plugins-themes-WinUXTheme
-      version: "ucrt64"
+      version: "{{ branch }}"
 
