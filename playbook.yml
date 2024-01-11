@@ -23,7 +23,7 @@
 
   - name: Download clang with mingw-fixes for Objective C
     ansible.builtin.unarchive:
-      src: https://qmcdn.blob.core.windows.net/gnustep/MINGW64-packages.zip
+      src: https://qmcdn.blob.core.windows.net/gnustep/MINGW64-packages.zip?v2
       dest: ~/pkg/
       remote_src: yes
 
