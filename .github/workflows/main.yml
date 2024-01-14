@@ -42,7 +42,8 @@ jobs:
         cmake --build . -j$(nproc)
         cmake --install . --prefix=/mingw64
         cp /mingw64/lib/objc.dll /mingw64/bin/
-        git archive HEAD --format=zip --output=~/dist/libobjc2-$(git rev-parse --short HEAD).zipake
+        git archive HEAD --format=zip --output=~/dist/libobjc2-$(git rev-parse --short HEAD).zip
+        cmake --install . --prefix=$HOME/dist/
 
     - name: Compile tools-make
       run: |
@@ -59,6 +60,8 @@ jobs:
         make -j$(nproc)
         make install
         git archive HEAD --format=zip --output=~/dist/libs-base-$(git rev-parse --short HEAD).zip
+        make dist
+        mv ../gnustep-base-*.tar.gz ~/dist
 
     - name: Compile libs-gui
       run: |
@@ -67,6 +70,8 @@ jobs:
         make -j$(nproc)
         make install
         git archive HEAD --format=zip --output=~/dist/libs-gui-$(git rev-parse --short HEAD).zip
+        make dist
+        mv ../gnustep-gui-*.tar.gz ~/dist
 
     - name: Compile libs-back
       run: |
@@ -76,6 +81,8 @@ jobs:
         make -j$(nproc)
         make install
         git archive HEAD --format=zip --output=~/dist/libs-back-$(git rev-parse --short HEAD).zip
+        make dist
+        mv ../gnustep-back-*.tar.gz ~/dist
 
     - name: Compile plugins-themes-WinUXTheme
       run: |
@@ -83,6 +90,8 @@ jobs:
         make -j$(nproc)
         make install
         git archive HEAD --format=zip --output=~/dist/plugins-themes-WinUXTheme-$(git rev-parse --short HEAD).zip
+        make dist
+        mv ../WinUXTheme*.tar.gz ~/dist
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
