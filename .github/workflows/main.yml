@@ -9,18 +9,22 @@ jobs:
       matrix:
         os: [ windows-2019 ]
         msystem: [ mingw64 ]
-        runtime: [ gcc, gnustep-2.0 ]
-        include:
+        abi: [ gcc, gnustep-2.0 ]
+        runtime: [ gcc-objc, libobjc2 ]          
+        exclude:
           - runtime: gcc
+            abi: gnustep-2.0
+        include:
+          - abi: gcc
             library-combo: gnu-gnu-gnu
             linker-flags: -fuse-ld=lld
-          - runtime: gnustep-2.0
+          - abi: gnustep-2.0
             library-combo: ng-gnu-gnu
             linker-flags: -fuse-ld=lld -lstdc++ -lgcc_s
       # Don't abort runners if a single one fails
       fail-fast: false
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} ${{ matrix.msystem }} ${{ matrix.combo }}
+    name: ${{ matrix.msystem }} ${{ matrix.runtime }} (${{ matrix.abi }})
     defaults:
       run:
         shell: msys2 {0}
@@ -44,11 +48,17 @@ jobs:
         cp /mingw64/lib/objc.dll /mingw64/bin/
         git archive HEAD --format=zip --output=$HOME/dist/libobjc2-$(git rev-parse --short HEAD).zip
         cmake --install . --prefix=$HOME/dist/
+      if: matrix.runtime == 'libobjc2'
+
+    - name: Install gcc-objc
+      run: |
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
+      if: matrix.runtime == 'gcc-objc'
 
     - name: Compile tools-make
       run: |
         cd ~/git/tools-make/
-        CC=clang CXX=clang++ LDFLAGS="${{ matrix.linker-flags }}" ./configure --with-library-combo=${{ matrix.library-combo }} --with-runtime-abi=${{ matrix.runtime }}
+        CC=clang CXX=clang++ LDFLAGS="${{ matrix.linker-flags }}" ./configure --with-library-combo=${{ matrix.library-combo }} --with-runtime-abi=${{ matrix.abi }}
         make -j$(nproc)
         make install
         git archive HEAD --format=zip --output=$HOME/dist/tools-make-$(git rev-parse --short HEAD).zip
