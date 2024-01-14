@@ -87,3 +87,8 @@
       dest: ~/git/plugins-themes-WinUXTheme
       version: "ucrt64"
 
+  - name: Create ~/dist directory
+    ansible.builtin.file:
+      path: ~/dist/
+      state: directory
+      mode: '0755'

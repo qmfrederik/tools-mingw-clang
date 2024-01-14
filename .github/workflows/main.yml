@@ -42,6 +42,7 @@ jobs:
         cmake --build . -j$(nproc)
         cmake --install . --prefix=/mingw64
         cp /mingw64/lib/objc.dll /mingw64/bin/
+        git archive HEAD --format=zip --output=~/dist/libobjc2-$(git rev-parse --short HEAD).zipake
 
     - name: Compile tools-make
       run: |
@@ -49,6 +50,7 @@ jobs:
         CC=clang CXX=clang++ LDFLAGS="${{ matrix.linker-flags }}" ./configure --with-library-combo=${{ matrix.library-combo }} --with-runtime-abi=${{ matrix.runtime }}
         make -j$(nproc)
         make install
+        git archive HEAD --format=zip --output=~/dist/tools-make-$(git rev-parse --short HEAD).zip
 
     - name: Compile libs-base
       run: |
@@ -56,6 +58,7 @@ jobs:
         ./configure
         make -j$(nproc)
         make install
+        git archive HEAD --format=zip --output=~/dist/libs-base-$(git rev-parse --short HEAD).zip
 
     - name: Compile libs-gui
       run: |
@@ -63,6 +66,7 @@ jobs:
         ./configure
         make -j$(nproc)
         make install
+        git archive HEAD --format=zip --output=~/dist/libs-gui-$(git rev-parse --short HEAD).zip
 
     - name: Compile libs-back
       run: |
@@ -71,9 +75,17 @@ jobs:
         ./configure --enable-graphics=cairo
         make -j$(nproc)
         make install
+        git archive HEAD --format=zip --output=~/dist/libs-back-$(git rev-parse --short HEAD).zip
 
     - name: Compile plugins-themes-WinUXTheme
       run: |
         cd ~/git/plugins-themes-WinUXTheme/
         make -j$(nproc)
         make install
+        git archive HEAD --format=zip --output=~/dist/plugins-themes-WinUXTheme-$(git rev-parse --short HEAD).zip
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: ~/dist/
