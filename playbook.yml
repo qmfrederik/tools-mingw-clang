@@ -8,6 +8,8 @@
       - make
       - unzip
       - mingw-w64-x86_64-cmake
+      - mingw-w64-x86_64-lld
+      - mingw-w64-x86_64-clang
       - mingw-w64-x86_64-cairo
       - mingw-w64-x86_64-freetype
       - mingw-w64-x86_64-gnutls
@@ -20,24 +22,6 @@
       path: ~/pkg/
       state: directory
       mode: '0755'
-
-  - name: Download clang with mingw-fixes for Objective C
-    ansible.builtin.unarchive:
-      src: https://qmcdn.blob.core.windows.net/gnustep/MINGW64-packages.zip
-      dest: ~/pkg/
-      remote_src: yes
-
-  - name: Install clang
-    community.general.pacman:
-      name: 
-        - ~/pkg/mingw-w64-x86_64-clang-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-clang-analyzer-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-clang-libs-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-clang-tools-extra-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-compiler-rt-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-lld-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-llvm-17.0.6-7-any.pkg.tar.zst
-        - ~/pkg/mingw-w64-x86_64-llvm-libs-17.0.6-7-any.pkg.tar.zst
 
   - name: Create ~/git directory
     ansible.builtin.file:
