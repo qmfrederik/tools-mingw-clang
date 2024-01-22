@@ -38,7 +38,7 @@
       name:
       - mingw-w64-x86_64-gcc-objc
       - mingw-w64-x86_64-libblocksruntime
-    when: abi == "gcc"
+    when: runtime == "gcc-objc"
 
   - name: Determine whether /mingw64/include/objc exists
     ansible.builtin.stat:
@@ -50,7 +50,7 @@
       src: /mingw64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/objc/
       dest: /mingw64/include/objc
       state: link
-    when: abi == "gcc" and objc_headers.stat.islnk is not defined
+    when: runtime == "gcc-objc" and objc_headers.stat.islnk is not defined
 
   # Alternatively, use libobjc2
   - name: Clone libobjc2
@@ -58,13 +58,14 @@
       repo: "https://github.com/gnustep/libobjc2"
       dest: ~/git/libobjc2
       version: "master"
-    when: abi == "gnustep-2.0"
+    when: runtime == "libobjc2"
 
   - name: Create ~/git/libobjc2/build directory
     ansible.builtin.file:
       path: ~/git/libobjc2/build
       state: directory
       mode: '0755'
+    when: runtime == "libobjc2"
 
   - name: Clone tools-make
     git: 
