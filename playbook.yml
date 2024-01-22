@@ -29,11 +29,35 @@
       state: directory
       mode: '0755'
 
+  # We link only objc/ into /include, as opposed to including /mingw64/lib/gcc/x86_64-w64-mingw32/13.2.0/include,
+  # as that would pull in GCC headers which are not compatible with clang
+  # Symlink detection doesn't work very well on MSYS2, and stat will report the symlink to be a directory, causing the
+  # state: link operation to fail.  Skip the symlink creation if we find a directory
+  - name: Install gcc runtime
+    community.general.pacman:
+      name:
+      - mingw-w64-x86_64-gcc-objc
+    when: abi == "gcc"
+
+  - name: Determine whether /mingw64/include/objc exists
+    ansible.builtin.stat:
+      path: /mingw64/include/objc
+    register: objc_headers
+
+  - name: Link the objc headers into /mingw64/include/
+    ansible.builtin.file:
+      src: /mingw64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/objc/
+      dest: /mingw64/include/objc
+      state: link
+    when: abi == "gcc" and objc_headers.stat.islnk is not defined
+
+  # Alternatively, use libobjc2
   - name: Clone libobjc2
     git: 
       repo: "https://github.com/gnustep/libobjc2"
       dest: ~/git/libobjc2
       version: "master"
+    when: abi == "gnustep-2.0"
 
   - name: Create ~/git/libobjc2/build directory
     ansible.builtin.file:
