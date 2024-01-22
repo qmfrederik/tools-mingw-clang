@@ -37,6 +37,7 @@
     community.general.pacman:
       name:
       - mingw-w64-x86_64-gcc-objc
+      - mingw-w64-x86_64-libblocksruntime
     when: abi == "gcc"
 
   - name: Determine whether /mingw64/include/objc exists
